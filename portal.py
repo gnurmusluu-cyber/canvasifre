@@ -1,42 +1,74 @@
 import streamlit as st
 import pandas as pd
 
-# 1. Google Sheets CSV Bağlantısı (Düzenlediğiniz linki buraya tırnak içine yapıştırın)
+# 1. Google Sheets CSV Bağlantısı (Kendi linkinizi buraya tırnak içine yapıştırın)
+# Önemli: Linkin sonu '/export?format=csv' ile bitmelidir.
 SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTD2yZrgEbIJ3KoCmGBFVc9xo6esKZKNB42iKHmXfJ_YFzA5v251a_4m6MG0F_nHQmnOCoxPXCQ1t6L/pub?output=csv"
 
 st.set_page_config(page_title="Nusaybin SB Anadolu Lisesi BB Portalı", layout="centered")
 
-# 2. Şifre Sorgulama Fonksiyonu
-def bilgileri_getir(no):
+# Sayfa Başlığı ve Okul Bilgisi
+st.title("🛡️ Bilgisayar Bilimi Ders Portalı")
+st.caption("Bilişim Teknolojileri Öğretmeni - Süleyman Bölünmez Anadolu Lisesi")
+
+# 2. Akıllı Veri Çekme Fonksiyonu
+def verileri_yukle():
     try:
+        # Veriyi çek ve sütun başlıklarındaki gizli boşlukları temizle
         df = pd.read_csv(SHEET_CSV_URL)
-        # Sütun isimleri tablonuzdakilerle birebir aynı olmalı
-        sonuc = df[df['Okul Numaranız'].astype(str) == str(no)]
-        return sonuc
-    except:
+        df.columns = df.columns.str.strip()
+        return df
+    except Exception as e:
+        st.error(f"Veri tabanına bağlanılamadı. Hata: {e}")
         return None
 
-# 3. Arayüz Tasarımı
-st.title("💻 Bilgisayar Bilimi Portalı")
-st.write("Nusaybin Süleyman Bölünmez Anadolu Lisesi")
-
+# 3. Giriş ve Şifre Sorgulama Paneli
 okul_no = st.text_input("Okul Numaranı Gir ve Enter'a Bas:", placeholder="Örn: 1234")
 
 if okul_no:
-    veri = bilgileri_getir(okul_no)
-    if veri is not None and not veri.empty:
-        # Tablonuzdaki sütun başlıklarına göre bilgileri çekiyoruz
-        ad = veri['Adınız ve Soyadınız'].values[0]
-        tc = veri['TC Kimlik No'].values[0]
-        sifre = veri['Eba/Canva Şifreniz'].values[0]
+    df = verileri_yukle()
+    
+    if df is not None:
+        # Okul numarası sütununu metne çevir ve ara
+        # Sütun isminin 'Okul Numaranız' olduğundan emin olun
+        df['Okul Numaranız'] = df['Okul Numaranız'].astype(str).str.strip()
+        ogrenci = df[df['Okul Numaranız'] == str(okul_no).strip()]
         
-        st.success(f"Merhaba {ad}!")
-        st.info(f"🆔 **TC Kimlik No:** {tc}")
-        st.info(f"🔐 **Canva/EBA Şifresi:** {sifre}")
-        
-        st.divider()
-        st.subheader("📅 2. Hafta Görevi: Tasarım Temelleri")
-        st.write("Kazanım: Hazır tasarım şablonlarını düzenleme yöntemlerini kavrar.")
-        st.markdown("- Canva'ya giriş yap.\n- Bir afiş şablonu seç.\n- Görsel hiyerarşiye dikkat ederek düzenle.")
-    else:
-        st.error("Numara bulunamadı! Lütfen formu doldurduğundan emin ol.")
+        if not ogrenci.empty:
+            # Bilgileri değişkenlere ata
+            ad_soyad = ogrenci['Adınız ve Soyadınız'].values[0]
+            tc_no = ogrenci['TC Kimlik No'].values[0]
+            eba_sifre = ogrenci['Eba/Canva Şifreniz'].values[0]
+            sinif = ogrenci['Sınıfınız'].values[0]
+
+            # Öğrenci Karşılama Ekranı
+            st.success(f"Hoş geldin, {ad_soyad.upper()}!")
+            
+            c1, c2 = st.columns(2)
+            with c1:
+                st.info(f"🆔 **TC Kimlik No:**\n\n{tc_no}")
+            with c2:
+                st.warning(f"🔐 **EBA/Canva Şifren:**\n\n{eba_sifre}")
+            
+            st.divider()
+            
+            # --- HAFTALIK DERS İÇERİĞİ ---
+            st.subheader(f"📅 2. Hafta: Şablon Sihri ve Düzenleme")
+            st.markdown("""
+            **Günün Hedefi:** Canva'da profesyonel bir afiş şablonunu kendine göre özelleştirmeyi öğrenmek.
+            
+            **Uygulama Adımları:**
+            1. Yukarıdaki şifrenle Canva'ya giriş yap.
+            2. 'Afiş' kategorisinden bir şablon seç.
+            3. Metinleri 'Nusaybin Bahar Şenliği' olarak değiştir.
+            4. Görsel hiyerarşiye dikkat ederek renkleri düzenle.
+            """)
+            
+            st.link_button("Canva Uygulamasını Aç", "https://www.canva.com")
+            
+        else:
+            st.error("Girdiğin numara sistemde bulunamadı. Lütfen formu doldurduğundan veya numaranı doğru yazdığından emin ol.")
+
+# 4. Alt Bilgi
+st.markdown("---")
+st.caption("⚠️ Bu bilgiler sadece ders içi kullanım içindir. Bilgilerini kimseyle paylaşma.")
