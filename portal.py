@@ -52,7 +52,7 @@ if okul_no:
             
         
             
-            st.link_button("Canva Uygulamasını Aç", "https://www.canva.com")
+            st.link_button("Canva Uygulamasını Aç (EBA ile giriş yap)", "https://www.canva.com")
             
         else:
             st.error("Girdiğin numara sistemde bulunamadı. Lütfen formu doldurduğundan veya numaranı doğru yazdığından emin ol.")
