@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 
 # 1. Google Sheets CSV Bağlantısı (Düzenlediğiniz linki buraya tırnak içine yapıştırın)
-SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/TABLO_ID_BURASI/export?format=csv"
+SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTD2yZrgEbIJ3KoCmGBFVc9xo6esKZKNB42iKHmXfJ_YFzA5v251a_4m6MG0F_nHQmnOCoxPXCQ1t6L/pub?output=csv"
 
 st.set_page_config(page_title="Nusaybin SB Anadolu Lisesi BB Portalı", layout="centered")
 
