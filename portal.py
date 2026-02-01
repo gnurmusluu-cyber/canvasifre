@@ -50,19 +50,7 @@ if okul_no:
             with c2:
                 st.warning(f"🔐 **EBA/Canva Şifren:**\n\n{eba_sifre}")
             
-            st.divider()
-            
-            # --- HAFTALIK DERS İÇERİĞİ ---
-            st.subheader(f"📅 2. Hafta: Şablon Sihri ve Düzenleme")
-            st.markdown("""
-            **Günün Hedefi:** Canva'da profesyonel bir afiş şablonunu kendine göre özelleştirmeyi öğrenmek.
-            
-            **Uygulama Adımları:**
-            1. Yukarıdaki şifrenle Canva'ya giriş yap.
-            2. 'Afiş' kategorisinden bir şablon seç.
-            3. Metinleri 'Nusaybin Bahar Şenliği' olarak değiştir.
-            4. Görsel hiyerarşiye dikkat ederek renkleri düzenle.
-            """)
+        
             
             st.link_button("Canva Uygulamasını Aç", "https://www.canva.com")
             
